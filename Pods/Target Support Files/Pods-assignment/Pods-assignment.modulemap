@@ -1,0 +1,6 @@
+module Pods_assignment {
+  umbrella header "Pods-assignment-umbrella.h"
+
+  export *
+  module * { export * }
+}

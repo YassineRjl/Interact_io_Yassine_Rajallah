@@ -1,0 +1,6 @@
+module AnimatedGradientView {
+  umbrella header "AnimatedGradientView-umbrella.h"
+
+  export *
+  module * { export * }
+}
