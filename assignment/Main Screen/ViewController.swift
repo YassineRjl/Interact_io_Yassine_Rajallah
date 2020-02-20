@@ -84,7 +84,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 self?.nextPage_PlaceHolder = downloadedRickAndMorty.info.next // store for next call
 
                 DispatchQueue.main.async {
-                    self?.charactersTableView.reloadSections(IndexSet(integer: 0), with: .left)
+                    self?.charactersTableView.reloadData()
                 }
 
             } catch {
@@ -129,7 +129,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         guard let obj = networkDataList?[indexPath.row] else {return UITableViewCell()}
         cell.setUpCell(characterObj: obj)
         cell.selectionStyle = .none // to avoid selection color on tap
-        
+              
         return cell
     }
     
@@ -160,7 +160,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             [weak self] in
             if let strongSelf = self{
                 strongSelf.networkDataList?.removeAll()
-                strongSelf.charactersTableView.reloadSections(IndexSet(integer: 0), with: .right)
+
+                strongSelf.charactersTableView.reloadData()
             }
         }
         

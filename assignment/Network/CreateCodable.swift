@@ -20,6 +20,7 @@ struct Info: Codable {
 }
 
 struct Results: Codable {
+    let id: Int
     let name: String
     let status: String
     let species: String

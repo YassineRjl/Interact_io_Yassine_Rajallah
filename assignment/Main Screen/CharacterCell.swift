@@ -17,7 +17,7 @@ class CharacterCell: UITableViewCell {
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var profileImage: UIImageView!
     
-    var profileID:String = "" // to check if current image belongs to this cell
+    var profileKey:String = "" // to check if current image belongs to this cell
     
     var characterObj: Results! // character object instance in cell to facilitate navigation to Character screen
     
@@ -28,26 +28,40 @@ class CharacterCell: UITableViewCell {
     }
     
     
+    
     func populateCell(){
         nameLabel.text =  characterObj.name
         speciesLabel.text = characterObj.species
         statusLabel.text = characterObj.status
-        profileID = characterObj.name
+        profileKey = characterObj.image
         
         profileImage.roundImage()
         
+        
+        populatedProfileImage()
+    }
+    
+    fileprivate func populatedProfileImage() {
+        
+        //delete previous image on scroll synchronously while waiting for the next asynchronous call
+      
+        
+        if(profileKey != characterObj.image){ return }
         
         if let image = CharacterCell.cache.object(forKey: characterObj?.image as NSString? ?? ""){
             //image cached, populate
             
             DispatchQueue.main.async{
                 [weak self] in
-                if let strongSelf = self{
-                    strongSelf.profileImage.image = nil
-                    strongSelf.profileImage.image = image
+                
+                    if(self?.profileKey == self?.characterObj.image){
+                        self?.profileImage.image = nil
+                        self?.profileImage.image = image
+                    }else{
+                        self?.profileImage.image = nil
                 }
             }
-                
+            
             
         }else{
             //download image from scratch
@@ -57,29 +71,26 @@ class CharacterCell: UITableViewCell {
                 
                 if let image = image {
                     DispatchQueue.main.async{
-                    [weak self] in
-                        if let strongSelf = self{
-                            if(strongSelf.profileID == strongSelf.characterObj.name){ // check equivalence to avoid wrong image
-                                strongSelf.profileImage.image = nil
-                                strongSelf.profileImage?.image = image
-                                CharacterCell.cache.setObject(image, forKey: url)
-                            }
+                        [weak self] in
+                        
+                        if(self?.profileKey == self?.characterObj.image){ // check equivalence to avoid wrong image
+                            self?.profileImage.image = nil
+                            self?.profileImage?.image = image
+                            CharacterCell.cache.setObject(image, forKey: url)
+                        }else{
+                            self?.profileImage.image = nil
                         }
+                        
                         
                     }
                 }
             }
         }
     }
-    
-    
     override func prepareForReuse() {
-        DispatchQueue.main.async{
-        [weak self] in
-            if let strongSelf = self{
-                strongSelf.profileImage.image = nil // to avoid images flickering
-            }
-        }
+       
+        profileImage.image = nil // to avoid images flickering
+          
     }
 
 }
